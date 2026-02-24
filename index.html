@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flight Booking System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f8ff;
+      color: #333;
+      text-align: center;
+    }
+
+    #loginSection, #signupSection, #bookFlightSection {
+      background-image: url('vacation.jpg');
+      background-size: cover;
+      background-position: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    #loginSection::before, #signupSection::before, #bookFlightSection::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+
+    .welcome {
+      text-align: center;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: xx-large;
+      font-weight: bold;
+      margin: 20px 0;
+      padding: 10px;
+    }
+
+    header {
+      background: linear-gradient(to right, #0077b6, #0096c7);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      background: #023e8a;
+      padding: 0.5rem 2rem;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+      display: inline-block;
+      padding: 8px 16px;
+    }
+
+    nav a:hover {
+      color: #ffdd00;
+    }
+
+    button {
+      padding: 0.8rem;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005f87;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    button.reset-button {
+      background-color: #ff6347;
+    }
+
+    button.reset-button:hover {
+      background-color: #e55347;
+    }
+
+    .deals {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 1rem;
+    }
+
+    .deal-card {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      padding: 1rem;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .deal-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .deal-card h3 {
+      font-size: 1.5rem;
+      color: #0077b6;
+    }
+
+    .deal-card p {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .deal-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .marquee {
+      background: #ffd60a;
+      color: #000;
+      padding: 0.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-container label {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      text-align: left;
+    }
+
+    .form-container input,
+    .form-container select {
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .gender-container, .class-options {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+
+    .gender-option, .class-option {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+
+    footer {
+      margin-top: 3rem;
+      background: #023e8a;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    footer a {
+      color: #ffdd00;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    .flight-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      margin: 2rem auto;
+      max-width: 1200px;
+    }
+
+    .flight-option {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .flight-option:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .flight-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .flight-time {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .flight-price {
+      color: #0077b6;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .flight-details {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    /* Special Fares Styles */
+    .special-fares {
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .special-fares h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .fares-container {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .fare-card {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      border-radius: 10px;
+      overflow: hidden;
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .fare-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1;
+    }
+
+    .fare-card img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .fare-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .fare-title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .fare-promo {
+      background-color: white;
+      color: black;
+      padding: 8px 20px;
+      border-radius: 30px;
+      display: inline-block;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  
+  
+  <header>Flight Booking System</header>
+  
+  <nav>
+    <a href="#" id="homeLink">Home</a>
+    <a href="#" id="flightsLink">Book Flight</a>
+    <a href="#" id="loginLink">Login</a>
+    <a href="#" id="signupLink">Sign Up</a>
+    <a href="deals.html" id =" additional_deals">Additional Deals</a>
+
+  </nav>
+
+  <!-- Home Section -->
+  <section id="homeSection">
+    <div class="welcome">Welcome to our Flight Booking Portal! Choose your destination across India.</div>
+    
+    <div class="marquee">
+      <marquee>🔥 Summer Holiday Bonanza! Up to 50% OFF on Select Flights! 🔥</marquee>
+    </div>
+  
+
+    <!-- Special Fares Section -->
+    <div class="special-fares">
+      <h2>Special Fares Offers</h2>
+      <div class="fares-container">
+        <div class="fare-card" onclick="applyDiscount('student')">
+          <img src="student.jpg" alt="Student Discount">
+          <div class="fare-content">
+            <div class="fare-title"></div>
+            <div class="fare-promo">Promo: Student</div>
+          </div>
+        </div>
+        
+        <div class="fare-card" onclick="applyDiscount('armed')">
+          <img src="army.jpg" alt="Armed Forces Discount">
+          <div class="fare-content">
+            <div class="fare-title"></div>
+            <div class="fare-promo">Promo: Armed Forces</div>
+          </div>
+        </div>
+        
+        <div class="fare-card" onclick="applyDiscount('senior')"> //add onhover or onmouseout
+          <img src="senior.jpg" alt="Senior Citizen Discount">
+          <div class="fare-content">
+            <div class="fare-title"></div>
+            <div class="fare-promo">Promo: Senior Citizen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deals">
+      <div class="deal-card" onclick="showFlightOptions('Delhi', 'Mumbai')">
+        <h3>Delhi to Mumbai</h3>
+        <p>From ₹1999 only!</p>
+        <img src="mumbai.jpg" alt="Delhi to Mumbai">
+      </div>
+      
+      <div class="deal-card" onclick="showFlightOptions('Bangalore', 'Chennai')">
+        <h3>Bangalore to Chennai</h3>
+        <p>Save up to ₹1200 this week</p>
+        <img src="chennai.jpg" alt="Bangalore to Chennai">
+      </div>
+      
+      <div class="deal-card" onclick="showFlightOptions('Kolkata', 'Delhi')">
+        <h3>Kolkata to Delhi</h3>
+        <p>Flat 25% off on return trips</p>
+        <img src="delhi.jpg" alt="Kolkata to Delhi">
+      </div>
+    </div>
+    <div id ="additional_deals" onclick="showFlightOptions('Chennai','Goa')">
+      <div id ="additional_deals" onclick="showFlightOptions('Delhi','Mumbai')">
+    </div>
+  </section>
+
+  <!-- Flight Options Section -->
+  <section id="flightOptionsSection" class="hidden">
+    <div class="form-container">
+      <h2>Available Flights</h2>
+      <div id="flightList" class="flight-options"></div>
+    </div>
+  </section>
+
+  <!-- Book Flight Section -->
+  <section id="bookFlightSection" class="hidden">
+    <div class="form-container">
+      <h2>Book Your Flight</h2>
+      <form id="bookingForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Enter your name" required>
+
+        <label for="from">From</label>
+        <select id="from">
+          <option value="Delhi">Delhi</option>
+          <option value="Mumbai">Mumbai</option>
+          <option value="Bangalore">Bangalore</option>
+          <option value="Chennai">Chennai</option>
+          <option value="Kolkata">Kolkata</option>
+        </select>
+
+        <label for="to">To</label>
+        <select id="to">
+          <option value="Delhi">Delhi</option>
+          <option value="Mumbai">Mumbai</option>
+          <option value="Bangalore">Bangalore</option>
+          <option value="Chennai">Chennai</option>
+          <option value="Kolkata">Kolkata</option>
+        </select>
+
+        <label for="date">Date of Journey</label>
+        <input type="date" id="date" required>
+
+        <label>Class</label>
+        <div class="class-options">
+          <div class="class-option">
+            <input type="radio" id="economy" name="class" value="Economy" checked>
+            <label for="economy">Economy</label>
+          </div>
+          <div class="class-option">
+            <input type="radio" id="business" name="class" value="Business">
+            <label for="business">Business</label>
+          </div>
+          <div class="class-option">
+            <input type="radio" id="first" name="class" value="First">
+            <label for="first">First</label>
+          </div>
+        </div>
+
+        <!-- Payment method selection -->
+<div>
+  <label for="paymentMethod">How do you want to pay?</label>
+  <select id="paymentMethod" onchange="toggleUpiOptions()">
+    <option value="UPI">UPI</option>
+    <option value="DebitCard">Debit Card</option>
+    <option value="CreditCard">Credit Card</option>
+  </select>
+</div>
+
+<!-- UPI options dropdown (initially hidden) -->
+<div id="upiOptionsContainer" style="display: none; margin-top: 10px;">
+  <label for="upiOptions">Select UPI provider:</label>
+  <select id="upiOptions">
+    <option value="RazorPay">RazorPay</option>
+    <option value="PhonePay">PhonePay</option>
+    <option value="GooglePay">GooglePay</option>
+  </select>
+</div>
+
+<script>
+  function toggleUpiOptions() {
+    // Get the selected payment method
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    
+    // Get the UPI options container
+    const upiOptionsContainer = document.getElementById('upiOptionsContainer');
+    
+    // Show the UPI options only if UPI is selected
+    if (paymentMethod === 'UPI') {
+      upiOptionsContainer.style.display = 'block';
+    } else {
+      upiOptionsContainer.style.display = 'none';
+    }
+  }
+</script>
+<div class="additional-services">
+  <h3>Additional Services</h3>
+  
+  <div class="service-category">
+    <h4>Meal Preferences</h4>
+    <div class="checkbox-group">
+      <div class="checkbox-option">
+        <input type="checkbox" id="mealIncluded" name="services" value="mealIncluded">
+        <label for="mealIncluded">In-flight meal included</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="vegetarianMeal" name="services" value="vegetarianMeal">
+        <label for="vegetarianMeal">Vegetarian meal</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="veganMeal" name="services" value="veganMeal">
+        <label for="veganMeal">Vegan meal</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="kosherMeal" name="services" value="kosherMeal">
+        <label for="kosherMeal">Kosher meal</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="halalMeal" name="services" value="halalMeal">
+        <label for="halalMeal">Halal meal</label>
+      </div>
+    </div>
+  </div>
+  
+  <div class="service-category">
+    <h4>Special Assistance</h4>
+    <div class="checkbox-group">
+      <div class="checkbox-option">
+        <input type="checkbox" id="wheelchairAssistance" name="services" value="wheelchairAssistance">
+        <label for="wheelchairAssistance">Wheelchair assistance</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="medicalSupport" name="services" value="medicalSupport">
+        <label for="medicalSupport">Medical support</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="oxygenSupport" name="services" value="oxygenSupport">
+        <label for="oxygenSupport">Oxygen cylinder support</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="assistanceAnimal" name="services" value="assistanceAnimal">
+        <label for="assistanceAnimal">Traveling with assistance animal</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="blindAssistance" name="services" value="blindAssistance">
+        <label for="blindAssistance">Visual impairment assistance</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="deafAssistance" name="services" value="deafAssistance">
+        <label for="deafAssistance">Hearing impairment assistance</label>
+      </div>
+    </div>
+  </div>
+  
+  <div class="service-category">
+    <h4>Travel Comfort</h4>
+    <div class="checkbox-group">
+      <div class="checkbox-option">
+        <input type="checkbox" id="extraLegroom" name="services" value="extraLegroom">
+        <label for="extraLegroom">Extra legroom (+₹599)</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="priorityBoarding" name="services" value="priorityBoarding">
+        <label for="priorityBoarding">Priority boarding (+₹299)</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="windowSeat" name="services" value="windowSeat">
+        <label for="windowSeat">Window seat preference (+₹199)</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="aisleSeat" name="services" value="aisleSeat">
+        <label for="aisleSeat">Aisle seat preference (+₹199)</label>
+      </div>
+    </div>
+  </div>
+  
+  <div class="service-category">
+    <h4>Travel with Children</h4>
+    <div class="checkbox-group">
+      <div class="checkbox-option">
+        <input type="checkbox" id="infantSupport" name="services" value="infantSupport">
+        <label for="infantSupport">Traveling with infant (0-2 years)</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="bassinet" name="services" value="bassinet">
+        <label for="bassinet">Bassinet request (subject to availability)</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="childMeal" name="services" value="childMeal">
+        <label for="childMeal">Child meal</label>
+      </div>
+    </div>
+  </div>
+  
+  <div class="service-category">
+    <h4>Baggage Options</h4>
+    <div class="checkbox-group">
+      <div class="checkbox-option">
+        <input type="checkbox" id="extraBaggage" name="services" value="extraBaggage">
+        <label for="extraBaggage">Extra checked baggage (+₹1499)</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="sportEquipment" name="services" value="sportEquipment">
+        <label for="sportEquipment">Sports equipment transport (+₹899)</label>
+      </div>
+      <div class="checkbox-option">
+        <input type="checkbox" id="fragileBaggage" name="services" value="fragileBaggage">
+        <label for="fragileBaggage">Fragile item handling (+₹499)</label>
+      </div>
+    </div>
+  </div>
+</div>
+        <div id="promoCodeContainer" class="hidden">
+          <label for="promoCode">Promo Code Applied:</label>
+          <input type="text" id="promoCode" readonly>
+        </div>
+
+        <div class="button-group">
+          <button type="submit" id="confirmBookingBtn">Confirm Booking</button>
+          <button type="reset" class="reset-button">Reset</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Booking Confirmation Section -->
+  <section id="confirmationSection" class="hidden">
+    <div class="form-container">
+      <h2>Booking Confirmation</h2>
+      <div id="confirmationDetails"></div>
+      <div class="button-group">
+        <button id="confirmFinalBtn" src="transaction.html">Confirm & Pay</button>
+        <button id="editBookingBtn" class="reset-button">Edit Booking</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Login Section -->
+  <section id="loginSection" class="hidden">
+    <div class="form-container">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="Enter your email ID" required>
+
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter your Password" required>
+
+        <div class="button-group">
+          <button type="submit">Login</button>
+          <button type="button" id="goToSignupBtn">New User? Sign Up</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Signup Section -->
+  <section id="signupSection" class="hidden">
+    <div class="form-container">
+      <h2>Create Account</h2>
+      <form id="signupForm">
+        <label for="signupName">Full Name</label>
+        <input type="text" id="signupName" placeholder="Enter your Name" required>
+
+        <label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" placeholder="Enter your Email ID" required>
+
+        <label for="signupPassword">Password</label>
+        <input type="password" id="signupPassword" placeholder="Enter your password" required>
+
+        <label for="signupConfirm">Confirm Password</label>
+        <input type="password" id="signupConfirm" placeholder="Confirm your password" required>
+
+        <label>Gender</label>
+        <div class="gender-container">
+          <div class="gender-option">
+            <input type="radio" id="genderMale" name="gender" value="Male" checked>
+            <label for="genderMale">Male</label>
+          </div>
+          <div class="gender-option">
+            <input type="radio" id="genderFemale" name="gender" value="Female">
+            <label for="genderFemale">Female</label>
+          </div>
+        </div>
+
+        <label for="signupDOB">Date of Birth</label>
+        <input type="date" id="signupDOB" required>
+
+        <div class="button-group">
+          <button type="submit">Sign Up</button>
+          <button type="button" id="goToLoginBtn">Already have an account? Login</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Flight Booking System | <a href="#">Terms & Conditions</a></p>
+  </footer>
+  <script>
+  // Global variables
+  let currentSection = 'homeSection';
+  let selectedFlight = {};
+  let appliedDiscount = null;
+  
+  // Navigation handlers
+  const navLinks = [
+    ['homeLink', 'homeSection'],
+    ['flightsLink', 'bookFlightSection'],
+    ['loginLink', 'loginSection'],
+    ['signupLink', 'signupSection'],
+    ['goToSignupBtn', 'signupSection'],
+    ['goToLoginBtn', 'loginSection'],
+    ['editBookingBtn', 'bookFlightSection']
+  ];
+  
+  navLinks.forEach(([linkId, sectionId]) => {
+    const element = document.getElementById(linkId);
+    if (element) {
+      element.addEventListener('click', () => showSection(sectionId));
+    }
+  });
+  
+  // Show section
+  function showSection(sectionId) {
+    document.querySelectorAll('section').forEach(section => {
+      section.classList.add('hidden');
+    });
+    document.getElementById(sectionId).classList.remove('hidden');
+    currentSection = sectionId;
+  }
+  
+  // Apply discount
+  function applyDiscount(type) {
+    const discountCodes = {
+      student: 'STUDENT10',
+      armed: 'ARMED10',
+      senior: 'SENIOR10'
+    };
+  
+    const promoCode = discountCodes[type];
+    if (promoCode) {
+      appliedDiscount = { type, code: promoCode, percent: 10 };
+      document.getElementById('promoCode').value = promoCode;
+      document.getElementById('promoCodeContainer').classList.remove('hidden');
+      showSection('bookFlightSection');
+      alert(`${promoCode} applied! 10% discount will be applied to your booking.`);
+    }
+  }
+  
+  // Generate flight options
+  function showFlightOptions(from, to) {
+    document.getElementById('from').value = from;
+    document.getElementById('to').value = to;
+  
+    const flightList = document.getElementById('flightList');
+    flightList.innerHTML = '';
+  
+    const times = ['06:00', '08:30', '10:45', '13:15', '16:30', '19:00', '21:45'];
+    const durations = ['1h 30m', '2h 15m', '2h 45m', '3h 10m'];
+    const airlines = ['IndiGo', 'Air India', 'SpiceJet', 'Vistara'];
+    const types = ['Direct', 'Non-stop', '1 Stop'];
+  
+    for (let i = 0; i < 6; i++) {
+      const flight = {
+        from,
+        to,
+        departTime: times[Math.floor(Math.random() * times.length)],
+        duration: durations[Math.floor(Math.random() * durations.length)],
+        airline: airlines[Math.floor(Math.random() * airlines.length)],
+        type: types[Math.floor(Math.random() * types.length)],
+        price: Math.floor(Math.random() * 3000) + 2000
+      };
+  
+      const flightOption = document.createElement('div');
+      flightOption.className = 'flight-option';
+      flightOption.innerHTML = `
+        <div class="flight-header">
+          <div class="flight-time">${flight.departTime}</div>
+          <div class="flight-price">₹${flight.price}</div>
+        </div>
+        <div class="flight-details">
+          <div class="flight-duration">${flight.duration}</div>
+          <div class="flight-type">${flight.type}</div>
+        </div>
+        <div>${flight.airline}</div>
+      `;
+  
+      flightOption.addEventListener('click', () => {
+        selectedFlight = flight;
+        document.getElementById('from').value = from;
+        document.getElementById('to').value = to;
+        document.getElementById('date').valueAsDate = new Date();
+        showSection('bookFlightSection');
+      });
+  
+      flightList.appendChild(flightOption);
+    }
+  
+    showSection('flightOptionsSection');
+  }
+  
+  // Booking form handler
+  document.getElementById('bookingForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+  
+    const name = document.getElementById('name').value.trim();
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
+    const date = document.getElementById('date').value;
+    const selectedClass = document.querySelector('input[name="class"]:checked').value;
+  
+    // Name validation
+    if (!isNaN(name) || /^\d+$/.test(name)) {
+      alert('Please enter a valid name (not just numbers).');
+      return;
+    }
+  
+    // From-To validation
+    if (from === to) {
+      alert('From and To destinations cannot be the same.');
+      return;
+    }
+  
+    // Date validation
+    const selectedDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (selectedDate < today) {
+      alert('Please select a valid date. Past dates are not allowed.');
+      return;
+    }
+  
+    // Default flight if none selected
+    if (!selectedFlight.airline) {
+      const times = ['06:00', '08:30', '10:45', '13:15', '16:30', '19:00', '21:45'];
+      const durations = ['1h 30m', '2h 15m', '2h 45m', '3h 10m'];
+      const airlines = ['IndiGo', 'Air India', 'SpiceJet', 'Vistara'];
+      const types = ['Direct', 'Non-stop', '1 Stop'];
+  
+      selectedFlight = {
+        from,
+        to,
+        departTime: times[Math.floor(Math.random() * times.length)],
+        duration: durations[Math.floor(Math.random() * durations.length)],
+        airline: airlines[Math.floor(Math.random() * airlines.length)],
+        type: types[Math.floor(Math.random() * types.length)],
+        price: Math.floor(Math.random() * 3000) + 2000
+      };
+    }
+  
+    let displayPrice = selectedFlight.price;
+    let discountInfo = '';
+  
+    if (appliedDiscount) {
+      const discountAmount = Math.round(selectedFlight.price * appliedDiscount.percent / 100);
+      displayPrice -= discountAmount;
+      discountInfo = `
+        <p><strong>Discount Applied:</strong> ${appliedDiscount.code} (${appliedDiscount.percent}%)</p>
+        <p><strong>Discount Amount:</strong> ₹${discountAmount}</p>
+      `;
+    }
+  
+    const confirmationDetails = document.getElementById('confirmationDetails');
+    confirmationDetails.innerHTML = `
+      <p><strong>Passenger:</strong> ${name}</p>
+      <p><strong>Route:</strong> ${from} to ${to}</p>
+      <p><strong>Date:</strong> ${new Date(date).toLocaleDateString()}</p>
+      <p><strong>Class:</strong> ${selectedClass}</p>
+      <hr>
+      <p><strong>Airline:</strong> ${selectedFlight.airline}</p>
+      <p><strong>Departure:</strong> ${selectedFlight.departTime}</p>
+      <p><strong>Duration:</strong> ${selectedFlight.duration}</p>
+      <p><strong>Flight Type:</strong> ${selectedFlight.type}</p>
+      <p><strong>Base Price:</strong> ₹${selectedFlight.price}</p>
+      ${discountInfo}
+      <p><strong>Final Price:</strong> ₹${displayPrice}</p>
+    `;
+  
+    showSection('confirmationSection');
+  });
+  
+  // Login form
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    alert('Login successful!');
+    showSection('homeSection');
+  });
+  
+  // Signup form
+  document.getElementById('signupForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const password = document.getElementById('signupPassword').value;
+    const confirm = document.getElementById('signupConfirm').value;
+  
+    if (password !== confirm) {
+      alert('Passwords do not match.');
+      return;
+    }
+  
+    alert('Sign up successful!');
+    showSection('homeSection');
+  });
+  
+  // Final confirmation
+// This code should be added to your index.html file
+// Replace the existing confirmFinalBtn event listener with this code
+
+// Find this section in your index.html and replace it:
+document.getElementById('confirmFinalBtn').addEventListener('click', function () {
+  alert('Booking confirmed! Payment processing...');
+
+  const passengerName = document.getElementById('name').value;
+  const travelDate = document.getElementById('date').value;
+  const selectedClass = document.querySelector('input[name="class"]:checked').value;
+  const paymentMethod = document.getElementById('paymentMethod').value;
+
+  const finalPrice = appliedDiscount
+    ? selectedFlight.price - Math.round(selectedFlight.price * appliedDiscount.percent / 100)
+    : selectedFlight.price;
+
+  const bookingDetails = {
+    name: passengerName,
+    from: selectedFlight.from,
+    to: selectedFlight.to,
+    date: travelDate,
+    time: selectedFlight.departTime,
+    duration: selectedFlight.duration,
+    airline: selectedFlight.airline,
+    type: selectedFlight.type,
+    price: finalPrice,
+    class: selectedClass,
+    paymentMethod: paymentMethod
+  };
+
+  localStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
+
+  appliedDiscount = null;
+  document.getElementById('promoCodeContainer').classList.add('hidden');
+
+  // Redirect based on payment method
+  if (paymentMethod === 'UPI') {
+    window.location.href = 'upi.html';
+  } else {
+    window.location.href = 'transaction.html';
+  }
+});
+  
+  // Initialize on load
+  window.onload = function () {
+    showSection('homeSection');
+  
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+      input.valueAsDate = new Date();
+      input.setAttribute('min', today);
+    });
+  };
+</script>    
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - SkyQuest</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+    .login-container {
+      background-color: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 350px;
+    }
+    h1 {
+      text-align: center;
+      color: #3a3a3a;
+      margin-bottom: 20px;
+    }
+    .login-form {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 5px;
+      display: block;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #2b5eb8;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #1a3c75;
+    }
+    .message {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo svg {
+      max-width: 240px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <!-- SkyQuest Logo SVG -->
+      <svg viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background -->
+        <defs>
+          <linearGradient id="skyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#2b5eb8" />
+            <stop offset="100%" stop-color="#1a3c75" />
+          </linearGradient>
+        </defs>
+        
+        <!-- Logo Shape -->
+        <rect x="10" y="10" width="220" height="60" rx="10" fill="url(#skyGradient)" />
+        
+        <!-- Airplane Silhouette -->
+        <path d="M60,40 L40,50 L40,45 L55,40 L40,35 L40,30 L60,40 Z" fill="white" />
+        <path d="M55,40 L190,40 L185,45 L55,45 L55,40 Z" fill="white" />
+        <path d="M165,40 L170,30 L180,30 L175,40 L165,40 Z" fill="white" />
+        <path d="M165,40 L170,50 L180,50 L175,40 L165,40 Z" fill="white" />
+        
+        <!-- Company Name -->
+        <text x="75" y="38" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="white">SKY</text>
+        <text x="120" y="38" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#f9d342">QUEST</text>
+        <text x="85" y="52" font-family="Arial, sans-serif" font-size="8" fill="white">FLIGHT BOOKING SYSTEM</text>
+      </svg>
+    </div>
+    
+    <h1>User Login</h1>
+    
+    <div id="message-container"></div>
+    
+    <form id="login-form" class="login-form">
+      <div class="form-group">
+        <label for="username">Select User:</label>
+        <select id="username" required>
+          <option value="">-- Select User --</option>
+          <!-- Users will be populated here dynamically -->
+        </select>
+      </div>
+      
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <script>
+    // Wait for the DOM to be loaded
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loginForm = document.getElementById('login-form');
+      const usernameSelect = document.getElementById('username');
+      const messageContainer = document.getElementById('message-container');
+      
+      // Function to show a message
+      function showMessage(message, isSuccess = true) {
+        messageContainer.innerHTML = `
+          <div class="message ${isSuccess ? 'success' : 'error'}">
+            ${message}
+          </div>
+        `;
+      }
+      
+      // Function to load users into the dropdown
+      async function loadUsers() {
+        try {
+          const users = await window.electronAPI.getUsers();
+          
+          if (users.length === 0) {
+            usernameSelect.innerHTML = '<option value="">No users found</option>';
+            return;
+          }
+          
+          // Clear the default option
+          usernameSelect.innerHTML = '<option value="">-- Select User --</option>';
+          
+          // Populate the user dropdown
+          users.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user;
+            option.textContent = user;
+            usernameSelect.appendChild(option);
+          });
+        } catch (error) {
+          showMessage('Error loading users: ' + error.message, false);
+        }
+      }
+      
+      // Handle form submission to authenticate
+      loginForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const username = usernameSelect.value;
+        
+        if (!username) {
+          showMessage('Please select a user', false);
+          return;
+        }
+        
+        try {
+          const result = await window.electronAPI.authenticateUser(username);
+          
+          if (result.success) {
+            showMessage('Login successful! Redirecting...', true);
+            
+            // Redirect to main page after a short delay
+            setTimeout(() => {
+              window.electronAPI.navigateTo('index');
+            }, 1500);
+          } else {
+            showMessage(result.message, false);
+          }
+        } catch (error) {
+          showMessage('Error during login: ' + error.message, false);
+        }
+      });
+      
+      // Load users when the page loads
+      loadUsers();
+    });
+  </script>
+</body>
+</html>

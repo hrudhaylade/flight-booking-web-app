@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UPI Payment - Flight Booking System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f8ff;
+      color: #333;
+      text-align: center;
+    }
+
+    header {
+      background: linear-gradient(to right, #0077b6, #0096c7);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      background: #023e8a;
+      padding: 0.5rem 2rem;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+      display: inline-block;
+      padding: 8px 16px;
+    }
+
+    nav a:hover {
+      color: #ffdd00;
+    }
+
+    .payment-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .payment-header {
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .payment-details {
+      text-align: left;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #0077b6;
+    }
+
+    .payment-details p {
+      margin: 0.5rem 0;
+    }
+
+    .upi-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .upi-option {
+      background-color: white;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1rem;
+      width: 120px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .upi-option:hover, .upi-option.selected {
+      transform: translateY(-5px);
+      box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+      border-color: #0077b6;
+    }
+
+    .upi-option img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      margin-bottom: 0.5rem;
+    }
+
+    .upi-form {
+      margin: 2rem 0;
+    }
+
+    .upi-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .upi-form input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    .qr-code-container {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      display: block;
+      margin: 0 auto;
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 0.8rem 1.5rem;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 0.5rem;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #005f87;
+    }
+
+    .button-secondary {
+      background-color: #6c757d;
+    }
+
+    .button-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    .timer-container {
+      text-align: center;
+      margin: 1rem 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 3rem;
+      background: #023e8a;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    footer a {
+      color: #ffdd00;
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    #confirmationSection, #boardingPassSection {
+      display: none;
+    }
+
+    /* Boarding Pass Styles */
+    .boarding-pass {
+      width: 100%;
+      max-width: 600px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .boarding-pass-header {
+      background: linear-gradient(135deg, #0077b6, #023e8a);
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .boarding-pass-header h2 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .boarding-pass-logo {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .boarding-pass-content {
+      padding: 1.5rem;
+    }
+
+    .flight-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .flight-cities {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 70%;
+    }
+
+    .flight-city {
+      text-align: center;
+    }
+
+    .flight-city-code {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .flight-city-name {
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+
+    .flight-arrow {
+      flex-grow: 1;
+      height: 2px;
+      background: #dee2e6;
+      margin: 0 1rem;
+      position: relative;
+    }
+
+    .flight-arrow::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -4px;
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid #dee2e6;
+    }
+
+    .passenger-info, .flight-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .info-item {
+      text-align: left;
+    }
+
+    .info-label {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-bottom: 0.3rem;
+    }
+
+    .info-value {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    .boarding-pass-footer {
+      padding: 1rem;
+      background: #f8f9fa;
+      border-top: 1px dashed #dee2e6;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #6c757d;
+    }
+
+    .barcode {
+      width: 90%;
+      height: 60px;
+      margin: 1rem auto;
+      background: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: #6c757d;
+      border: 1px solid #dee2e6;
+    }
+
+    .boarding-actions {
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+
+    .print-button {
+      background-color: #28a745;
+    }
+
+    .print-button:hover {
+      background-color: #218838;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #boardingPassSection, #boardingPassSection * {
+        visibility: visible;
+      }
+      #boardingPassSection {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+      .boarding-actions {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>Flight Booking System</header>
+  
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="index.html#flightsLink">Book Flight</a>
+    <a href="index.html#loginLink">Login</a>
+    <a href="index.html#signupLink">Sign Up</a>
+    <a href="deals.html">Additional Deals</a>
+  </nav>
+
+  <div class="payment-container" id="paymentSection">
+    <div class="payment-header">
+      <h2>UPI Payment</h2>
+      <p>Complete your payment to confirm your flight booking</p>
+    </div>
+
+    <div class="payment-details" id="bookingDetails">
+      <h3>Booking Details</h3>
+      <p><strong>Passenger:</strong> <span id="passengerName">Loading...</span></p>
+      <p><strong>Flight:</strong> <span id="flightRoute">Loading...</span></p>
+      <p><strong>Date:</strong> <span id="travelDate">Loading...</span></p>
+      <p><strong>Time:</strong> <span id="departureTime">Loading...</span></p>
+      <p><strong>Airline:</strong> <span id="airline">Loading...</span></p>
+      <p><strong>Duration:</strong> <span id="duration">Loading...</span></p>
+      <p><strong>Class:</strong> <span id="travelClass">Loading...</span></p>
+      <h4>Amount to Pay: ₹<span id="paymentAmount">Loading...</span></h4>
+    </div>
+
+    <div class="upi-options">
+      <div class="upi-option" onclick="selectUpiOption(this, 'GooglePay')">
+        <img src="gpay.png" alt="Google Pay">
+        <span>Google Pay</span>
+      </div>
+      <div class="upi-option" onclick="selectUpiOption(this, 'PhonePe')">
+        <img src="phonepe.png" alt="PhonePe">
+        <span>PhonePe</span>
+      </div>
+      <div class="upi-option" onclick="selectUpiOption(this, 'Paytm')">
+        <img src="paytm.png" alt="Paytm">
+        <span>Paytm</span>
+      </div>
+      <div class="upi-option" onclick="selectUpiOption(this, 'BHIM')">
+        <img src="bhim.png" alt="BHIM UPI">
+        <span>BHIM UPI</span>
+      </div>
+    </div>
+
+    <div class="upi-form">
+      <label for="upiId">Enter UPI ID</label>
+      <input type="text" id="upiId" placeholder="username@upi" required>
+    </div>
+
+    <div class="qr-code-container">
+      <h3>Scan QR Code to Pay</h3>
+      <div class="qr-code">
+        <img src="qr.jpg" height="auto" width="150" alt="QR Code for Payment">
+      </div>
+    </div>
+
+    <div class="timer-container">
+      Time remaining: <span id="timer">5:00</span>
+    </div>
+
+    <div>
+      <button onclick="processPayment()">Pay Now</button>
+      <button class="button-secondary" onclick="window.location.href='index.html'">Cancel</button>
+    </div>
+  </div>
+
+  <div id="confirmationSection" class="payment-container">
+    <div class="payment-header">
+      <h2>Payment Successful!</h2>
+      <p>Your booking has been confirmed</p>
+    </div>
+
+    <div class="payment-details">
+      <h3>Transaction Details</h3>
+      <p><strong>Transaction ID:</strong> <span id="transactionId"></span></p>
+      <p><strong>Amount Paid:</strong> ₹<span id="paidAmount"></span></p>
+      <p><strong>Payment Method:</strong> UPI</p>
+      <p><strong>Date & Time:</strong> <span id="transactionTime"></span></p>
+    </div>
+
+    <div>
+      <p>A confirmation email has been sent to your registered email address.</p>
+      <p>Your e-ticket has been generated successfully.</p>
+    </div>
+
+    <div>
+      <button onclick="showBoardingPass()">View Boarding Pass</button>
+      <button class="button-secondary" onclick="window.location.href='index.html'">Return to Home</button>
+    </div>
+  </div>
+
+  <div id="boardingPassSection" class="payment-container">
+    <div class="payment-header">
+      <h2>Your Boarding Pass</h2>
+    </div>
+
+    <div class="boarding-pass">
+      <div class="boarding-pass-header">
+        <div class="boarding-pass-logo">FBS</div>
+        <h2>Boarding Pass</h2>
+      </div>
+      
+      <div class="boarding-pass-content">
+        <div class="flight-info">
+          <div class="flight-cities">
+            <div class="flight-city">
+              <div class="flight-city-code" id="bp-from-code">DEL</div>
+              <div class="flight-city-name" id="bp-from-name">Delhi</div>
+            </div>
+            
+            <div class="flight-arrow"></div>
+            
+            <div class="flight-city">
+              <div class="flight-city-code" id="bp-to-code">BOM</div>
+              <div class="flight-city-name" id="bp-to-name">Mumbai</div>
+            </div>
+          </div>
+          
+          <div class="flight-number">
+            <div class="info-label">Flight</div>
+            <div class="info-value" id="bp-flight-number">AI-102</div>
+          </div>
+        </div>
+        
+        <div class="passenger-info">
+          <div class="info-item">
+            <div class="info-label">Passenger</div>
+            <div class="info-value" id="bp-passenger-name">John Doe</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">Seat</div>
+            <div class="info-value" id="bp-seat">12A</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">Class</div>
+            <div class="info-value" id="bp-class">Economy</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">Gate</div>
+            <div class="info-value" id="bp-gate">B4</div>
+          </div>
+        </div>
+        
+        <div class="flight-details">
+          <div class="info-item">
+            <div class="info-label">Date</div>
+            <div class="info-value" id="bp-date">12 Apr, 2025</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">Boarding Time</div>
+            <div class="info-value" id="bp-boarding-time">09:30</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">Departure</div>
+            <div class="info-value" id="bp-departure-time">10:15</div>
+          </div>
+          
+          <div class="info-item">
+            <div class="info-label">Arrival</div>
+            <div class="info-value" id="bp-arrival-time">12:30</div>
+          </div>
+        </div>
+        
+        <div class="barcode">
+          BOARDING PASS BARCODE
+        </div>
+      </div>
+      
+      <div class="boarding-pass-footer">
+        <p>Please be at the boarding gate at least 30 minutes before departure.</p>
+        <p>Flight Booking System &copy; 2025</p>
+      </div>
+    </div>
+    
+    <div class="boarding-actions">
+      <button onclick="printBoardingPass()" class="print-button">Print Boarding Pass</button>
+      <button onclick="window.location.href='index.html'">Return to Home</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Flight Booking System | <a href="#">Terms & Conditions</a></p>
+  </footer>
+
+  <script>
+    // Global variables
+    let selectedUpiApp = '';
+    let timeLeft = 300; // 5 minutes in seconds
+    let timerInterval;
+    let bookingDetails = null;
+    
+    // City codes mapping
+    const cityCodes = {
+      'Delhi': 'DEL',
+      'Mumbai': 'BOM',
+      'Bangalore': 'BLR',
+      'Chennai': 'MAA',
+      'Kolkata': 'CCU',
+      'Goa': 'GOI'
+    };
+    
+    // Load booking details from localStorage
+    window.onload = function() {
+      // Try to get booking details from localStorage
+      const bookingDetailsString = localStorage.getItem('bookingDetails');
+      
+      if (bookingDetailsString) {
+        try {
+          bookingDetails = JSON.parse(bookingDetailsString);
+          
+          // Populate the booking details
+          document.getElementById('passengerName').textContent = bookingDetails.name || 'N/A';
+          document.getElementById('flightRoute').textContent = `${bookingDetails.from} to ${bookingDetails.to}`;
+          document.getElementById('travelDate').textContent = new Date(bookingDetails.date).toLocaleDateString();
+          document.getElementById('departureTime').textContent = bookingDetails.time;
+          document.getElementById('airline').textContent = bookingDetails.airline;
+          document.getElementById('duration').textContent = bookingDetails.duration;
+          document.getElementById('travelClass').textContent = bookingDetails.class;
+          document.getElementById('paymentAmount').textContent = bookingDetails.price;
+          
+        } catch (e) {
+          console.error('Error parsing booking details:', e);
+          setDefaultBookingDetails();
+        }
+      } else {
+        setDefaultBookingDetails();
+      }
+      
+      // Start the timer
+      startTimer();
+    };
+    
+    // Set default booking details if none are found
+    function setDefaultBookingDetails() {
+      bookingDetails = {
+        name: 'John Doe',
+        from: 'Delhi',
+        to: 'Mumbai',
+        date: new Date().toISOString().split('T')[0],
+        time: '15:30',
+        duration: '2h 15m',
+        airline: 'Air India',
+        class: 'Economy',
+        price: '3499'
+      };
+      
+      document.getElementById('passengerName').textContent = bookingDetails.name;
+      document.getElementById('flightRoute').textContent = `${bookingDetails.from} to ${bookingDetails.to}`;
+      document.getElementById('travelDate').textContent = new Date(bookingDetails.date).toLocaleDateString();
+      document.getElementById('departureTime').textContent = bookingDetails.time;
+      document.getElementById('airline').textContent = bookingDetails.airline;
+      document.getElementById('duration').textContent = bookingDetails.duration;
+      document.getElementById('travelClass').textContent = bookingDetails.class;
+      document.getElementById('paymentAmount').textContent = bookingDetails.price;
+    }
+    
+    // UPI option selection
+    function selectUpiOption(element, app) {
+      // Remove selected class from all options
+      document.querySelectorAll('.upi-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked option
+      element.classList.add('selected');
+      selectedUpiApp = app;
+      
+      // Update UPI ID placeholder based on selected app
+      const upiIdInput = document.getElementById('upiId');
+      switch(app) {
+        case 'GooglePay':
+          upiIdInput.placeholder = 'username@okicici';
+          break;
+        case 'PhonePe':
+          upiIdInput.placeholder = 'username@ybl';
+          break;
+        case 'Paytm':
+          upiIdInput.placeholder = 'username@paytm';
+          break;
+        case 'BHIM':
+          upiIdInput.placeholder = 'username@upi';
+          break;
+        default:
+          upiIdInput.placeholder = 'username@upi';
+      }
+    }
+    
+    // Timer function
+    function startTimer() {
+      updateTimer();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+    
+    function updateTimer() {
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        alert('Session expired. Redirecting to home page.');
+        window.location.href = 'index.html';
+        return;
+      }
+      
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById('timer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      timeLeft--;
+    }
+    
+    // Process payment function
+    function processPayment() {
+      const upiId = document.getElementById('upiId').value.trim();
+      
+      if (!upiId) {
+        alert('Please enter a valid UPI ID.');
+        return;
+      }
+      
+      if (!selectedUpiApp) {
+        alert('Please select a UPI payment option.');
+        return;
+      }
+      
+      // Show a loading message or spinner
+      alert('Processing payment...');
+      
+      // Simulate payment processing with a timeout
+      setTimeout(() => {
+        clearInterval(timerInterval);
+        
+        // Generate a random transaction ID
+        const transactionId = 'UPI' + Date.now().toString().slice(-10) + Math.floor(Math.random() * 1000);
+        
+        // Set confirmation details
+        document.getElementById('transactionId').textContent = transactionId;
+        document.getElementById('paidAmount').textContent = document.getElementById('paymentAmount').textContent;
+        document.getElementById('transactionTime').textContent = new Date().toLocaleString();
+        
+        // Hide payment container and show confirmation
+        document.getElementById('paymentSection').style.display = 'none';
+        document.getElementById('confirmationSection').style.display = 'block';
+        
+        // Store the transaction details for boarding pass
+        if (bookingDetails) {
+          bookingDetails.transactionId = transactionId;
+          bookingDetails.paymentTime = new Date().toLocaleString();
+          localStorage.setItem('confirmedBooking', JSON.stringify(bookingDetails));
+        }
+      }, 2000);
+    }
+    
+    // Show boarding pass function
+    function showBoardingPass() {
+      // Hide confirmation section
+      document.getElementById('confirmationSection').style.display = 'none';
+      
+      // Generate boarding pass details
+      const departureTime = bookingDetails.time;
+      const departureHour = parseInt(departureTime.split(':')[0]);
+      const departureMinute = parseInt(departureTime.split(':')[1]);
+      
+      // Calculate boarding time (30 minutes before departure)
+      const boardingDate = new Date();
+      boardingDate.setHours(departureHour);
+      boardingDate.setMinutes(departureMinute - 30);
+      const boardingTime = `${String(boardingDate.getHours()).padStart(2, '0')}:${String(boardingDate.getMinutes()).padStart(2, '0')}`;
+      
+      // Calculate arrival time based on duration
+      const durationHours = parseInt(bookingDetails.duration.split('h')[0]);
+      const durationMinutes = parseInt(bookingDetails.duration.split(' ')[1].replace('m', '')) || 0;
+      
+      const arrivalDate = new Date();
+      arrivalDate.setHours(departureHour + durationHours);
+      arrivalDate.setMinutes(departureMinute + durationMinutes);
+      const arrivalTime = `${String(arrivalDate.getHours()).padStart(2, '0')}:${String(arrivalDate.getMinutes()).padStart(2, '0')}`;
+      
+      // Generate random gate and seat
+      const gates = ['A1', 'A2', 'B1', 'B2', 'B3', 'B4', 'C1', 'C2', 'C3', 'D1', 'D2'];
+      const gate = gates[Math.floor(Math.random() * gates.length)];
+      
+      let seatRow = Math.floor(Math.random() * 30) + 1;
+      const seatColumns = ['A', 'B', 'C', 'D', 'E', 'F'];
+      const seatColumn = seatColumns[Math.floor(Math.random() * seatColumns.length)];
+      const seat = `${seatRow}${seatColumn}`;
+      
+      // Generate flight number based on airline
+      let flightPrefix = 'AI';
+      if (bookingDetails.airline === 'IndiGo') flightPrefix = 'IG';
+      else if (bookingDetails.airline === 'SpiceJet') flightPrefix = 'SJ';
+      else if (bookingDetails.airline === 'Vistara') flightPrefix = 'VS';
+      
+      const flightNumber = `${flightPrefix}-${Math.floor(Math.random() * 900) + 100}`;
+      
+      // Populate boarding pass fields
+      document.getElementById('bp-from-code').textContent = cityCodes[bookingDetails.from] || 'DEL';
+      document.getElementById('bp-from-name').textContent = bookingDetails.from;
+      document.getElementById('bp-to-code').textContent = cityCodes[bookingDetails.to] || 'BOM';
+      document.getElementById('bp-to-name').textContent = bookingDetails.to;
+      document.getElementById('bp-flight-number').textContent = flightNumber;
+      document.getElementById('bp-passenger-name').textContent = bookingDetails.name;
+      document.getElementById('bp-seat').textContent = seat;
+      document.getElementById('bp-class').textContent = bookingDetails.class;
+      document.getElementById('bp-gate').textContent = gate;
+      document.getElementById('bp-date').textContent = new Date(bookingDetails.date).toLocaleDateString('en-US', {day: '2-digit', month: 'short', year: 'numeric'});
+      document.getElementById('bp-boarding-time').textContent = boardingTime;
+      document.getElementById('bp-departure-time').textContent = departureTime;
+      document.getElementById('bp-arrival-time').textContent = arrivalTime;
+      
+      // Show boarding pass section
+      document.getElementById('boardingPassSection').style.display = 'block';
+      
+      // Clear localStorage booking details to prevent reuse
+      localStorage.removeItem('bookingDetails');
+    }
+    
+    // Print boarding pass
+    function printBoardingPass() {
+      window.print();
+    }
+  </script>
+</body>
+</html>

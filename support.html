@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Support Page</title>
+  <style>
+    body {
+      background-color: blanchedalmond;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      background-color: beige;
+      color: blueviolet;
+      padding: 15px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .support-search {
+      width: 100%;
+      max-width: 400px;
+      display: block;
+      margin: 30px auto 20px auto;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .support-form {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .support-form input,
+    .support-form textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .support-form textarea {
+      height: 120px;
+      resize: vertical;
+    }
+
+    .support-form button {
+      width: 100%;
+      padding: 12px;
+      background-color: blueviolet;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .support-form button:hover {
+      background-color: indigo;
+    }
+
+    .contact-info {
+      max-width: 500px;
+      margin: 30px auto;
+      background-color: #fdf5e6;
+      padding: 20px;
+      border-radius: 12px;
+      font-size: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-info p {
+      margin: 10px 0;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 24px;
+      }
+
+      .support-form,
+      .contact-info {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Support Page</h1>
+  <input type="text" placeholder="Search for help..." class="support-search" />
+
+  <form class="support-form">
+    <input type="text" placeholder="Your Name" required />
+    <input type="email" placeholder="Email" required />
+    <textarea placeholder="Describe your issue..." required></textarea>
+    <button type="submit">Submit Ticket</button>
+  </form>
+
+  <div class="contact-info">
+    <p><strong>Call Us:</strong> 1800-123-4567</p>
+    <p><strong>Email:</strong> support@skyquest.com</p>
+    <p><strong>WhatsApp:</strong> +91 98409 31366</p>
+  </div>
+
+</body>
+</html>
