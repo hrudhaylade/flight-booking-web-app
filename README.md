@@ -1,2 +1,14 @@
-# Travel-Destination-website
-Developed a front-end Travel and Flight Booking Web Application that simulates an online ticket reservation system. Implemented user login authentication, destination browsing,flight selection,and a UPI-based payment interface using HTML, CSS,andJavaScript Designed a modular multipage workflow to provide a realistic booking &amp;transaction experience.
+# ✈️ Flight Booking Web Application
+
+🔗 Live Demo: https://hrudhaylade.github.io/flight-booking-web-app/
+🔗 Source Code: https://github.com/hrudhaylade/flight-booking-web-app
+
+## Features
+- User login authentication
+- Destination browsing
+- Flight selection
+- UPI payment simulation
+- Booking confirmation
+
+## Tech Stack
+HTML, CSS, JavaScript
